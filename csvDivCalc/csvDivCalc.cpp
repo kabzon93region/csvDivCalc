@@ -2,28 +2,6 @@
 #include "calc.h"
 
 
-//---------------------
-double okrugl(double current)
-{
-	cout << current << endl;
-	current = round(current * 100000000) / 100000000;
-	cout << current << endl;
-	current = round(current * 10000000) / 10000000;
-	cout << current << endl;
-	current = round(current * 1000000) / 1000000;
-	cout << current << endl;
-	current = round(current * 100000) / 100000;
-	cout << current << endl;
-	current = round(current * 10000) / 10000;
-	cout << current << endl;
-	current = round(current * 1000) / 1000;
-	cout << current << endl;
-	current = round(current * 100) / 100;
-	cout << current << endl;
-
-	return current;
-}
-//---------------------
 
 
 
@@ -48,6 +26,7 @@ int main()
 	   
 	ifstream iFile(ifn + ".csv");
 	ofstream oFile(ofn + ".csv");
+	ifstream adrFile("adr.csv");
 
 
 	   	 
@@ -59,8 +38,15 @@ int main()
 			return 1;
 		}
 
+		//проверяем успешность открытия файла расписок
+		if (!adrFile.is_open())
+		{
+			cout << "Обшибка: Файл расписок не открылся (T_T)" << endl;
+			system("pause");
+			return 1;
+		}
 
-
+		
 	//запрашиваем ввод количества строк для прокатки сбора данных из файла выплат
 	cout << "Количество строк всего документа: ";
 	cin >> stroki; 
@@ -82,7 +68,6 @@ int main()
 
 
 
-
 	//массивы данных в которые мы вносим данные из файла выплат
 	string *dataReestraArray = new string [stroki];
 	string *pustotaArray = new string[stroki];
@@ -98,54 +83,72 @@ int main()
 	string *poluchenoArray = new string[stroki];
 	string *valutaArray = new string[stroki];
 
+
+
+
+	//запрашиваем количество строк в справочнике расписок
+	cout << "Количество строк в справочнике расписок: ";
+	cin >> adrStroki;
+	cout << endl;
+
 	   	  
+
+	//массивы данных в которые вносится инфа из справочника комиссий расписок
+	string *adrReestrArray = new string[adrStroki];
+	string *adrNameArray = new string[adrStroki];
+	string *adrIsinArray = new string[adrStroki];
+	string *adrKommissiaArray = new string[adrStroki];
+	string *adrViplataArray = new string[adrStroki];
+
+
+		//запускаем цикл сбора данных из файла расписок
+		iteral = 0;
+		while (iteral < adrStroki)
+		{
+			getline(adrFile, adrReestrArray[iteral], ';');
+			getline(adrFile, adrNameArray[iteral], ';');
+			getline(adrFile, adrIsinArray[iteral], ';');
+			getline(adrFile, adrKommissiaArray[iteral], ';');
+			getline(adrFile, adrViplataArray[iteral], '\n');
+			iteral++;
+		}
+
+
+
 		//запускаем цикл сбора данных из файла выплат
+		iteral = 0;
 		while(iteral < stroki)
 		{
-			getline(iFile, dataReestra, ';');
-			dataReestraArray[iteral] = dataReestra.c_str();
+			getline(iFile, dataReestraArray[iteral], ';');
 
-			getline(iFile, pustota, ';');
-			pustotaArray[iteral] = pustota.c_str();
+			getline(iFile, pustotaArray[iteral], ';');
 
-			getline(iFile, dataViplai, ';');
-			dataViplaiArray[iteral] = dataViplai.c_str();
+			getline(iFile, dataViplaiArray[iteral], ';');
 
-			getline(iFile, tipViplati, ';');
-			tipViplatiArray[iteral] = tipViplati.c_str();
+			getline(iFile, tipViplatiArray[iteral], ';');
 
-			getline(iFile, naimenovanieBumagi, ';');
-			naimenovanieBumagiArray[iteral] = naimenovanieBumagi.c_str();
+			getline(iFile, naimenovanieBumagiArray[iteral], ';');
 
-			getline(iFile, isin, ';');
-			isinArray[iteral] = isin.c_str();
+			getline(iFile, isinArray[iteral], ';');
 
-			getline(iFile, stranaEmitenta, ';');
-			stranaEmitentaArray[iteral] = stranaEmitenta.c_str();
+			getline(iFile, stranaEmitentaArray[iteral], ';');
 
-			getline(iFile, kolichestvoBumag, ';');
-			kolichestvoBumagArray[iteral] = kolichestvoBumag.c_str();
+			getline(iFile, kolichestvoBumagArray[iteral], ';');
 
-			getline(iFile, viplataNa1bumagu, ';');
-			viplataNa1bumaguArray[iteral] = viplataNa1bumagu.c_str();
+			getline(iFile, viplataNa1bumaguArray[iteral], ';');
 
-			getline(iFile, komissia, ';');
-			komissiaArray[iteral] = komissia.c_str();
+			getline(iFile, komissiaArray[iteral], ';');
 
-			getline(iFile, nalog, ';');
-			nalogArray[iteral] = nalog.c_str();
+			getline(iFile, nalogArray[iteral], ';');
 
-			getline(iFile, polucheno, ';');
-			poluchenoArray[iteral] = polucheno.c_str();
+			getline(iFile, poluchenoArray[iteral], ';');
 
-
-
-			getline(iFile, valuta, '\n');
-			valutaArray[iteral] = valuta.c_str();
-
+			getline(iFile, valutaArray[iteral], '\n');
 
 			iteral++;
 		}
+
+
 
 
 		//отправляем на пересчёт значения из массивов
@@ -166,6 +169,15 @@ int main()
 			}
 
 
+			//првоеряем расписка ли это
+			if (calc::adrAnalyse( dataReestraArray[iteral], isinArray[iteral], viplataNa1bumaguArray[iteral], adrReestrArray, adrIsinArray, adrViplataArray, adrStroki) == true)
+			{
+				//проводим рассчёт расписки по ссылкам/указателям
+				calc::adrKomCalc( ref(dataReestraArray[iteral]), ref(isinArray[iteral]), ref(kolichestvoBumagArray[iteral]), ref(viplataNa1bumaguArray[iteral]), ref(komissiaArray[iteral]), ref(nalogArray[iteral]), ref(poluchenoArray[iteral]), adrReestrArray, adrIsinArray, adrViplataArray, adrKommissiaArray, adrStroki, iteral+1);
+				goto endRaschet;
+			}
+
+
 			//првоеряем предыдущую строку на исключения
 			for (size_t i = 0; i < kolvoStrokIskluchenia; i++)
 			{
@@ -177,7 +189,6 @@ int main()
 				}
 			}
 
-		proverkaNaKompens:
 			//проверка на компенс и его расчёт если да			
 			if ( (calc::kompensAnalise(ref(dataReestraArray[iteral - 1]), ref(dataViplaiArray[iteral - 1]), ref(tipViplatiArray[iteral - 1]), ref(isinArray[iteral - 1]), ref(kolichestvoBumagArray[iteral - 1]), ref(viplataNa1bumaguArray[iteral - 1]), ref(poluchenoArray[iteral-1]), ref(dataReestraArray[iteral]), ref(dataViplaiArray[iteral]), ref(tipViplatiArray[iteral]), ref(isinArray[iteral]), ref(kolichestvoBumagArray[iteral]), ref(viplataNa1bumaguArray[iteral]), ref(poluchenoArray[iteral]))) == true)
 			{
@@ -224,13 +235,26 @@ int main()
 		}
 
 
+
+
+
 	//закрываем файлы
 	iFile.close();
 	oFile.close();
+	adrFile.close();
+
+
 
 	//system("pause");
 
+
+
 	//очищаем динамические массивы
+	delete[] adrReestrArray;
+	delete[] adrNameArray;
+	delete[] adrIsinArray;
+	delete[] adrKommissiaArray;
+	delete[] adrViplataArray;
 	delete[] strokiIskluchenia;
 	delete[] dataReestraArray;
 	delete[] pustotaArray;
@@ -247,6 +271,8 @@ int main()
 	delete[] valutaArray;
 
 
+
+	system("pause");
 	return 0;
 }
 //---------------------

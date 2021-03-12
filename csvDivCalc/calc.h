@@ -25,10 +25,10 @@ public:
 	static bool kompensAnalise(string &d11, string &d21, string &t1, string &isin1, string &k1, string &v1b1, string &p1, string &d12, string &d22, string &t2, string &isin2, string &k2, string &v1b2, string &p2);
 	static void kompensCalc(string &t1, string &k1, string &v1b1, string &n1, string &p1, string &t2, string &n2, string &p2);
 
-	static bool adrAnalyse();
-	static void getADRk();
+	static bool adrAnalyse(string dr, string isin, string v1b, string adrDr[], string adrIsin[], string adrV1b[], int &adrKol);
+	static void adrKomCalc(string &dr, string &isin, string &k, string &v1b, string &kom, string &nal, string &pol, string adrDr[], string adrIsin[], string adrV1b[], string adrKom[], int &adrKol, int stroka);
 
-	static bool nalogAnalise();
+	static int nalogAnalise(double kol, double v1b, double nal, double pol, int stroka);
 	static void nalogCalc();
 
 };

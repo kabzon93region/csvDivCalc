@@ -28,19 +28,6 @@ using namespace std;
 */
 
 //переменные сбора для данных
-string dataReestra, pustota;
-string dataViplai;
-string tipViplati;
-string naimenovanieBumagi;
-string isin;
-string stranaEmitenta;
-string kolichestvoBumag;
-string viplataNa1bumagu;
-string komissia;
-string nalog;
-string polucheno;
-string valuta;
-
 string komADR;
 
 int isklucheniaRaschotov[1000]{};
@@ -52,7 +39,7 @@ int typeDiv;
 
 
 //переменные для работы
-int iteral = 0, stroki = 0, kolvoStrokIskluchenia = 0;
+int iteral = 0, stroki = 0, kolvoStrokIskluchenia = 0, adrStroki = 0;
 
 
 
